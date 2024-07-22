@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="task">
-      <InputText type="text" v-model="valueTest" />
       <h1>{{ msg }}</h1>
       <label for="new-task"></label>
       <div class="tasks">
@@ -12,44 +11,94 @@
             name=""
             id="new-task"
             v-model="newTask"
-            @:keyup.enter="addTask"
+            @keyup.enter="addTask"
             placeholder="Try typing 'Buy milk'"
             autocapitalize="off"
           />
-          <input type="submit" class="submit" value="➡️" />
-          <ul>
-            <li v-for="(task, index) in tasks" :key="index">
-              <input type="checkbox" v-model="index.completed" />
-              <span :class="{ completed: task.completed }">{{
-                task.text
-              }}</span>
-              <i class="pi pi-search" style="font-size: 2rem; color: black"></i>
-              <button @click="deleteTask(index)">Clear All Tasks</button>
-            </li>
-          </ul>
+          <input type="submit" @click="addTask" class="submit" value="➡️" />
         </div>
       </div>
+      <ul id="divider">
+        <li class="divider">No tasks defined</li>
+      </ul>
+      <ul id="taskCheck" v-if="tasks.length > 0">
+        <li class="task-li" v-for="(task, index) in tasks" :key="index">
+          <input class="checkbox" type="checkbox" v-model="index.completed" />
+          <span :class="{ completed: task.completed }">{{ task.text }}</span>
+        </li>
+        <button class="deleteTask" @click="deleteTask(index)">
+          Delete task
+        </button>
+      </ul>
     </div>
-    <button @click="clearCompleted">Clear Completed</button>
+    <button @click="clearCompletedTask">
+      <i class="pi pi-trash" style="color: white; margin-right: 5px"></i>Clear
+      Completed
+    </button>
+    <button @click="clearAll">
+      <i class="pi pi-trash" style="color: white; margin-right: 5px"></i>Clear
+      All
+    </button>
   </div>
 </template>
 
 <script>
-import InputText from "primevue/inputtext";
-import { ref } from "vue";
+// import InputText from "primevue/inputtext"; -->
+// import { ref } from "vue";
 
 export default {
-  name: "HelloWorld",
+  name: "TaskTodo",
+  data() {
+    return {
+      newTask: "",
+      tasks: [],
+    };
+  },
   components: {
-    InputText,
+    //InputText,
+  },
+  mounted() {
+    this.loadTask();
+  },
+  methods: {
+    addTask() {
+      if (this.newTask.trim()) {
+        const newTask = {
+          id: Date.now(),
+          text: this.newTask.trim(),
+          completed: false,
+        };
+        this.tasks.push(newTask);
+        this.saveTasks();
+        this.newTask = "";
+      }
+    },
+    saveTasks() {
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
+    },
+    loadTasks() {
+      const savedTasks = localStorage.getItem("tasks");
+      if (savedTasks) {
+        try {
+          this.tasks = JSON.parse(savedTasks);
+        } catch (e) {
+          console.error("Error parsing tasks from localStorage", e);
+        }
+      }
+    },
+    deleteTask() {
+      this.tasks.splice(this.index, 1);
+    },
+    clearCompletedTask() {
+      this.tasks = this.tasks.filter((task) => !task.completed);
+    },
+    clearAll() {
+      this.tasks = [];
+    },
   },
   props: {
     msg: String,
     value: String,
-  },
-  setup() {
-    const valueTest = ref();
-    return valueTest;
   },
 };
 </script>

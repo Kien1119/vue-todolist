@@ -15,7 +15,7 @@ export default {
 
 <style>
 body {
-  /* background: #222; */
+  background: #222;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -26,6 +26,9 @@ body {
   margin-top: 60px;
 }
 
+.tasks {
+  display: flex;
+}
 .new-task-form {
   display: flex;
   align-items: center;
@@ -34,7 +37,6 @@ body {
   background: #333;
   padding: calc(2 * 0.5rem);
   border-radius: calc((0.5rem));
-  width: calc(100% - 4 * 0.5rem);
   max-width: 50rem;
   border: 1px solid #333;
   margin-left: calc(30% - 4 * 0.5rem);
@@ -63,6 +65,7 @@ body {
 }
 
 .submit {
+  cursor: pointer;
   border: none;
   margin: 0;
   padding: 0;
@@ -80,7 +83,47 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  background: var(--task-background);
+  background: #444;
   color: white;
+}
+button:hover {
+  background: #222;
+}
+
+#taskCheck {
+  width: 760px;
+  height: 73px;
+  background: #333;
+  list-style-type: none;
+  margin: 20px;
+  justify-content: space-around;
+  margin-left: calc(30% - 4 * 0.5rem);
+  border-radius: calc((0.5rem));
+}
+.task-li {
+  height: 73px;
+  float: left;
+  text-align: center;
+  align-content: center;
+}
+.task-li.completed {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.divider {
+  margin: 10px;
+  padding: 0.5rem;
+  text-align: center;
+}
+ul,
+li {
+  margin: 0;
+  list-style-type: none;
+}
+li {
+  display: list-item;
+
+  text-align: center;
 }
 </style>
