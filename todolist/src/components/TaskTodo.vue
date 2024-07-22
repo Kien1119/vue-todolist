@@ -63,11 +63,7 @@ export default {
   methods: {
     addTask() {
       if (this.newTask.trim()) {
-        const newTask = {
-          id: Date.now(),
-          text: this.newTask.trim(),
-          completed: false,
-        };
+        const newTask = { text: this.newTask.trim(), completed: false };
         this.tasks.push(newTask);
         this.saveTasks();
         this.newTask = "";
@@ -86,14 +82,17 @@ export default {
         }
       }
     },
-    deleteTask() {
-      this.tasks.splice(this.index, 1);
+    deleteTask(index) {
+      this.tasks.splice(index, 1);
+      this.saveTasks();
     },
     clearCompletedTask() {
       this.tasks = this.tasks.filter((task) => !task.completed);
+      this.saveTasks();
     },
     clearAll() {
       this.tasks = [];
+      this.saveTasks();
     },
   },
   props: {
