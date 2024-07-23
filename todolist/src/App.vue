@@ -76,8 +76,7 @@ body {
 button {
   float: right;
   margin-left: 0;
-  margin-right: 22%;
-  margin-top: 20px;
+  margin-right: 8px;
   padding: 10px 20px;
   font-size: 1em;
   border: none;
@@ -92,8 +91,7 @@ button:hover {
 
 #taskCheck {
   width: 760px;
-  height: 73px;
-  background: #333;
+  /* height: 73px; */
   list-style-type: none;
   margin: 20px;
   justify-content: space-around;
@@ -102,9 +100,14 @@ button:hover {
 }
 .task-li {
   height: 73px;
-  float: left;
+  margin-bottom: 8px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: #333;
   align-content: center;
+  border-radius: calc((0.5rem));
 }
 .task-li.completed {
   text-decoration: line-through;
