@@ -22,34 +22,31 @@
         <li class="divider">{{ resolveTaskText }}</li>
       </ul>
       <ul id="taskCheck" v-if="tasks.length > 0">
-        <li class="task-li" v-for="(task, index) in tasks" :key="index">
+        <li class="task-li" v-for="task in tasks" :key="task.id">
           <input class="checkbox" type="checkbox" v-model="task.completed" />
           <span
-            v-if="editIndex !== index"
+            v-if="editId !== task.id"
             :class="task.completed ? 'task_complete' : ''"
           >
             {{ task.text }}
           </span>
           <input type="text" v-else v-model="editData" />
-          <button
-            v-if="editIndex == index"
-            @click="cancelTask(task.text, index)"
-          >
+          <button v-if="editId === task.id" @click="cancelTask()">
             <i class="pi pi-times" style="color: red"></i>
           </button>
           <button
-            v-if="editIndex !== index"
-            @click="updateTask(task.text, index)"
+            v-if="editId !== task.id"
+            @click="updateTask(task.text, task.id)"
           >
             <i
               class="pi pi-user-edit"
               style="color: white; margin-right: 5px"
             ></i>
           </button>
-          <button v-if="editIndex == index" @click="ediTask()">
+          <button v-if="editId === task.id" @click="ediTask()">
             <i class="pi pi-check" style="color: green"></i>
           </button>
-          <button class="deleteTask" @click="deleteTask(index)">
+          <button class="deleteTask" @click="deleteTask(task.id)">
             Delete task
           </button>
         </li>
@@ -76,7 +73,7 @@ export default {
     return {
       newTask: "",
       tasks: [],
-      editIndex: -1,
+      editId: null,
       editData: "",
     };
   },
@@ -114,22 +111,28 @@ export default {
   methods: {
     addTask() {
       if (this.newTask.trim()) {
-        const newTask = { text: this.newTask.trim(), completed: false };
+        const newTask = {
+          id: Date.now(),
+          text: this.newTask.trim(),
+          completed: false,
+        };
         this.tasks.push(newTask);
         this.saveTasks();
         this.newTask = "";
       }
     },
-    updateTask(text, index) {
-      this.editData = text;
-      this.editIndex = index;
+    updateTask(text, id) {
+      if (confirm(`Bạn muốn update task?`)) {
+        this.editData = text;
+        this.editId = id;
+      }
     },
     saveTasks() {
       localStorage.setItem("tasks", JSON.stringify(this.tasks));
     },
-    deleteTask(index) {
-      if (confirm(`Bạn muốn xóa task ${index + 1} chứ??`)) {
-        this.tasks = this.tasks.filter((t, i) => i !== index);
+    deleteTask(id) {
+      if (confirm(`Bạn muốn xóa task này chứ??`)) {
+        this.tasks = this.tasks.filter((task) => task.id !== id);
         this.saveTasks();
       }
     },
@@ -146,20 +149,20 @@ export default {
       }
     },
     cancelTask() {
-      this.editIndex = -1;
-      this.editData = "";
-      alert("Cancle Success");
+      if (confirm(`Bạn muốn cancel đúng không?`)) {
+        this.editId = null;
+        this.editData = "";
+      }
     },
 
     ediTask() {
       if (confirm(`Bạn có muốn cập nhật không??`)) {
-        this.tasks.forEach((data, index) => {
-          if (this.editIndex === index) {
-            data.text = this.editData;
-            console.log(data);
+        this.tasks.forEach((task) => {
+          if (this.editId === task.id) {
+            task.text = this.editData;
           }
         });
-        this.editIndex = -1;
+        this.editId = null;
         this.editData = "";
         this.saveTasks();
       }
@@ -175,7 +178,7 @@ export default {
 
 <style scoped>
 .task_complete {
-  color: #222;
+  color: blue;
   text-decoration: line-through;
 }
 </style>
