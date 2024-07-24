@@ -64,6 +64,9 @@ body {
   border: none;
 }
 
+span {
+  width: 100%;
+}
 .submit {
   cursor: pointer;
   border: none;
@@ -104,7 +107,7 @@ button:hover {
   text-align: center;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   background: #333;
   align-content: center;
   border-radius: calc((0.5rem));

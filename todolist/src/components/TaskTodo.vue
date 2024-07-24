@@ -37,7 +37,10 @@
           >
             <i class="pi pi-times" style="color: red"></i>
           </button>
-          <button @click="updateTask(task.text, index)">
+          <button
+            v-if="editIndex !== index"
+            @click="updateTask(task.text, index)"
+          >
             <i
               class="pi pi-user-edit"
               style="color: white; margin-right: 5px"
@@ -95,12 +98,12 @@ export default {
       if (this.tasks.length === 0) {
         return "No tasks defined";
       }
-      if (this.tasks.length > 0 && !this.tasks.every((t) => t.completed)) {
+      if (this.tasks.length > 0 && !this.tasks?.every((t) => t.completed)) {
         return "To do";
       }
       if (
         this.tasks.length > 0 &&
-        this.tasks.filter((task) => !task.completed)
+        this.tasks.filter((task) => !task.completed).length === 0
       ) {
         return "Completed";
       } else {
@@ -125,16 +128,22 @@ export default {
       localStorage.setItem("tasks", JSON.stringify(this.tasks));
     },
     deleteTask(index) {
-      this.tasks.splice(index, 1);
-      this.saveTasks();
+      if (confirm(`Bạn muốn xóa task ${index + 1} chứ??`)) {
+        this.tasks = this.tasks.filter((t, i) => i !== index);
+        this.saveTasks();
+      }
     },
     clearCompletedTask() {
-      this.tasks = this.tasks.filter((task) => !task.completed);
-      this.saveTasks();
+      if (confirm(`Bạn vẫn muốn xóa các công việc đã hoàn thành chứ ??`)) {
+        this.tasks = this.tasks.filter((task) => !task.completed);
+        this.saveTasks();
+      }
     },
     clearAll() {
-      this.tasks = [];
-      this.saveTasks();
+      if (confirm(`Bạn có muốn xóa tất cả các task không?`)) {
+        this.tasks = [];
+        this.saveTasks();
+      }
     },
     cancelTask() {
       this.editIndex = -1;
@@ -143,16 +152,17 @@ export default {
     },
 
     ediTask() {
-      this.tasks.forEach((data, index) => {
-        if (this.editIndex === index) {
-          data.text = this.editData;
-          console.log(data);
-        }
-      });
-      this.editIndex = -1;
-      this.editData = "";
-      console.log(this.tasks);
-      this.saveTasks();
+      if (confirm(`Bạn có muốn cập nhật không??`)) {
+        this.tasks.forEach((data, index) => {
+          if (this.editIndex === index) {
+            data.text = this.editData;
+            console.log(data);
+          }
+        });
+        this.editIndex = -1;
+        this.editData = "";
+        this.saveTasks();
+      }
     },
   },
 
